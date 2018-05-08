@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>GIPHY Maker</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="style.css"></script>
+</head>
+<body>
+
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>                        
+      </button>
+    
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="#">GIPHY Maker</a></li>
+       
+      </ul>
+      <div class="nav navbar-nav navbar-right">
+        <form>
+            <input id="new-term" type="text">
+            <button type="submit" id="search-term">Search</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</nav>
+  
+<div class="container-fluid text-center">    
+  <div class="row content">
+    <div class="col-sm-2 sidenav">
+     
+    </div>
+    <div class="col-sm-8 text-left"> 
+      <h3>Click to see GIF below!</h3>
+      <div id="btn-row"></div>
+      <hr>
+      <!-- GIFs go here -->
+     <div id="gif-zone"></div>
+    </div>
+    <div class="col-sm-2 sidenav">
+     
+    </div>
+  </div>
+</div>
+
+<!-- <footer class="container-fluid text-center">
+  <p>Footer Text</p>
+</footer> -->
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script type="text/javascript">
+
+
+    // This section creates the buttons and added new buttons when the user enters a new term
+    
+    // Variable with an array of button values
+    var btnVal = [ "random", "llamas", "kittens", "butterfly" ];
+    // Loops through btnVal array items and makes buttons
+    var mkBtns = function() {
+    
+        for (var i = 0; i < btnVal.length; i++) {
+            console.log(btnVal[i]);
+                var btnCreate = $("<button>");
+                    $("#btn-row").append(btnCreate);
+                    btnCreate.attr("data-term", btnVal[i]);
+                    btnCreate.attr("class", "searchBtn");
+                    btnCreate.text(btnVal[i]);
+            }
+        }
+    // Takes the value from the input and adds it into the array
+     $("#search-term").on("click", function(event){
+      event.preventDefault();
+      var newTerm = $("#new-term").val().trim();
+      btnVal.push(newTerm);
+      mkBtns(); 
+     })    
+    
+    
+    mkBtns();
+
+    $(".searchBtn").on("click", function(event){
+        var term = $(this).attr("data-term");
+
+        var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + term + "&api_key=dc6zaTOxFJmzC&limit=10";
+
+        $.ajax({
+            url: queryURL,
+            method: "GET"
+
+        }).then(function(response) {
+            var results = response.data;
+            var gifZone = $("#gif-zone");
+            var gifblk = $("<div>");
+            
+            for(var i = 0; i < results.length; i++ ) {
+                var gifImg = $("<img>")
+                var gifUrls = results[i].images.fixed_height.url;
+                gifblk.append(gifImg);
+                $(gifImg).attr("src", results[i].images.fixed_height.url);
+                gifZone.append(gifblk);
+                console.log(gifUrls);
+                console.log(results);
+
+            }
+        })
+    })
+
+    </script>
+
+    </body>
+</html>  
+                    
